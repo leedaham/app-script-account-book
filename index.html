@@ -1,0 +1,344 @@
+<!doctype html>
+<html class="no-js" lang="" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YES!</title>
+  <style>
+    :root {
+      --main-bg-color: beige;
+      --make-color: mediumseagreen;
+      --spend-color: indianred;
+      --point-color: #5c95f0;
+      --point-strong-color: #173565;
+    }
+    input {
+      text-align: end;
+      width: 99%;
+      height: 22px;
+    }
+    input::placeholder {
+      text-align: end;
+    }
+    select {
+      text-align: end;
+      width: 101.5%;
+      height: 30px;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--main-bg-color);
+    }
+    #titleBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      width: 88%;
+      height: 75px;
+      background-color: var(--main-bg-color);
+      border-radius: 6px;
+    }
+    #title {
+      font-size: 26px;
+      -webkit-text-stroke: 1px black;
+      color: white;
+    }
+    #goSheet {
+      width: 84%;
+      margin-bottom: 8px;
+      padding: 4px;
+      border-radius: 6px;
+      color: white;
+      background-color: green;
+      text-align: center;
+      text-decoration: unset; 
+    }
+    
+    #bodyBox {
+      width: 88%;
+      text-align: center;
+      border-radius: 10px;
+    }
+    #statusBox {
+      position: relative;
+      width: 100%;
+      background-color: white;
+      min-height: 235px;
+      border-radius: 10px;
+      padding: 10px 0px;
+      box-sizing: border-box;
+    }
+    #statusBox .loadingOverlay {
+      position: absolute;
+      display: none;
+      width: 96%;
+      height: 96%;
+      top: 2%;
+      left: 2%;
+      opacity: 0.9;
+      background-color: black;
+      border-radius: 10px;      
+    }
+    #statusBox .loadingOverlay p {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 24px;
+    }
+    #dateBox {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0 14px;
+    }
+    #today {
+      color: #6a6a5a;
+    }
+    #dateStrongBox {
+      flex: 1;
+    }
+    #year {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--point-color);
+    }
+    #month {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--point-strong-color);
+    }
+    #inputMonth {
+      all: unset;
+      padding: 4px;
+    }
+    .statusValueBox {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 10px;
+      padding: 0 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      text-align: end;
+    }
+    .statusLabel {
+      flex: 1;
+    }
+    .statusValue {
+      flex: 0 0 35%;
+    }
+    #totalBox {
+      padding: 20px;
+      color: white;
+      font-weight: 600;
+      font-size: unset;
+    }
+    .plusStatus {
+      background-color: var(--make-color);
+    }
+    .minusStatus {
+      background-color: var(--spend-color);
+    }
+    #incomeBox {
+      color: var(--make-color);
+      font-weight: 600;
+    }
+    #expenseBox {
+      color: var(--spend-color);
+      font-weight: 600;
+    }
+    #menuBox {
+      width: 100%;
+      height: 100px;
+    }
+    #formBox {
+      position: fixed;
+      bottom: 20px;
+      width: 88%;
+      display: flex;
+      justify-content: center;
+      padding: 5px;
+      align-items: center;
+    }
+    #goForm {
+      display: block;
+      width: 93%;
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: var(--point-color);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0px 0px 6px #005ffe;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    #goForm:hover {
+      box-shadow: 0px 0px 3px #005ffe;
+      transform: translateY(2px);
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(function() {
+      const year = $('#year');
+      const month = $('#month');
+      const inputMonth = $('#inputMonth');
+
+      const total = $('#total');
+      const income = $('#income');
+      const expense = $('#expense');
+      const rawExpense = $('#rawExpense');
+      const save = $('#save');
+      const discount = $('#discount');
+
+      const statusLoadingOverlay = $('#statusBox .loadingOverlay');
+
+
+      const ssId = "<?= ssId ?>";
+      $('#goSheet').attr('href', 'https://docs.google.com/spreadsheets/d/'+ssId+'/edit');
+
+      getCurrentYearAndMonth(year, month);
+
+
+
+      statusLoadingOverlay.show();
+      google.script.run.withSuccessHandler(function(data){        
+        total.text((data[0][0] - data[0][1]));
+        income.text(data[0][0]);
+        expense.text(data[0][1]);
+        rawExpense.text('-'+data[0][2]);
+        save.text('+'+data[0][3]);
+        discount.text('+'+data[0][4]);
+        checkTotalAndChangeBackgroundColor();
+        statusLoadingOverlay.hide();
+      }).getThisMonthlyReport();
+
+      inputMonth.change(function(){
+        statusLoadingOverlay.show();        
+        const inputVals = inputMonth.val();      
+        const parts = inputVals.split("-");
+        const yearVal = parts[0];
+        const monthVal = parts[1];
+
+        year.text(yearVal);
+        month.text(monthVal);
+        google.script.run.withSuccessHandler(function(data){
+          total.text((data[0][0] - data[0][1]));
+          income.text(data[0][0]);
+          expense.text(data[0][1]);
+          rawExpense.text('-'+data[0][2]);
+          save.text('+'+data[0][3]);
+          discount.text('+'+data[0][4]);
+          checkTotalAndChangeBackgroundColor();
+          statusLoadingOverlay.hide();
+      }).getMonthlyReport(yearVal, monthVal);
+      })
+
+
+    });
+    
+    function loadPage(page) {
+      google.script.run.withSuccessHandler(function(html) {
+        document.open();
+        document.write(html);
+        document.close();
+      }).getHtml(page);
+    }
+    function getCurrentYearAndMonth(yearTag, monthTag) {
+      const todayTag = $('#today');
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
+      const day = today.getDate();
+
+      // 월을 두 자리로 표시 (01, 02, ..., 12)
+      const formattedMonth = month < 10 ? '0' + month : month;
+      const formattedDay = day < 10 ? '0' + day : day;
+
+      // HTML 요소에 표시
+      const inputMonth = $('#inputMonth');
+      inputMonth.val(year+'-'+formattedMonth);
+      // yearTag.text(year);
+      // monthTag.text(formattedMonth);
+      // todayTag.text(year+'-'+formattedMonth+'-'+formattedDay);
+    }
+    function checkTotalAndChangeBackgroundColor(){
+      const total = $('#total');
+      const totalBox = $('#totalBox');
+      const statusBox = $('#statusBox');
+      if(total.text() < 0){
+        totalBox.addClass('minusStatus');
+        totalBox.removeClass('plusStatus');
+        statusBox.css('border', '2px solid #cd5c5b47');
+      } else {
+        totalBox.removeClass('minusStatus');
+        totalBox.addClass('plusStatus');
+        statusBox.css('border', '2px solid #3cb37196');
+      }
+    }
+    
+
+  </script>
+</head>
+
+<body>
+
+<div id="titleBox">
+  <h2 id="title">Account Book</h2>
+</div>
+<a id="goSheet" href="" target="_blank">Go to the sheet!</a>
+<div id="bodyBox">
+  <div id="statusBox">
+    <div class="loadingOverlay">
+      <p>Loading...</p>
+    </div>
+    <div id="dateBox">
+      <div id="dateStrongBox">
+        <!-- <span id="year">1999</span>
+        <span id="month">12</span> -->
+        <input type="month" id="inputMonth" />        
+      </div>
+    </div>
+    <div id="totalBox" class="statusValueBox">
+      <span id="totalLabel" >이 달 현황</span>
+      <span id="total">0</span>
+    </div>
+    <div id="incomeBox" class="statusValueBox">
+      <span id="incomeLabel" class="statusLabel">수입 현황</span>
+      <span id="income" class="statusValue">0</span>
+    </div>
+    <div id="expenseBox" class="statusValueBox">
+      <span id="expenseLabel" class="statusLabel">지출 현황</span>
+      <span id="expense" class="statusValue">0</span>
+    </div>
+    <div id="rawExpenseBox" class="statusValueBox">
+      <span id="rawExpenseLabel" class="statusLabel">기 지출</span>
+      <span id="rawExpense" class="statusValue">0</span>
+    </div>
+    <div id="saveBox" class="statusValueBox">
+      <span id="saveLabel" class="statusLabel">저축</span>
+      <span id="save" class="statusValue">0</span>
+    </div>
+    <div id="discountBox" class="statusValueBox">
+      <span id="discountLabel" class="statusLabel">할인</span>
+      <span id="discount" class="statusValue">0</span>
+    </div>
+  </div>  
+</div>
+
+<div id="formBox">
+  <a id="goForm" onclick="loadPage('form')">작성하기</a>
+</div>
+
+
+</body>
+
+</html>

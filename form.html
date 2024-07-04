@@ -1,0 +1,744 @@
+<!doctype html>
+<html class="no-js" lang="" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YES!</title>
+  <style>
+    :root {
+      --main-bg-color: beige;
+      --make-color: mediumseagreen;
+      --spend-color: indianred;
+      --point-color: #5c95f0;
+    }
+    input {
+      text-align: end;
+      width: 99%;
+      height: 22px;
+    }
+    input::placeholder {
+      text-align: end;
+    }
+    select {
+      text-align: end;
+      width: 101.5%;
+      height: 30px;
+    }
+    body {
+      display: flex;
+      flex-direction: column; /* 세로로 순서대로 정렬 */
+      align-items: center;    /* 가로 가운데 정렬 */
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--main-bg-color);
+    }
+    #titleBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      width: 88%;
+      height: 75px;
+      background-color: var(--main-bg-color);
+      border-radius: 6px;
+    }
+    #title {
+      font-size: 24px;
+    }
+    #bodyBox {
+      width: 88%;
+      text-align: center;
+      background-color: white;
+      border-radius: 10px;
+    }
+
+    /* form common */
+    #insertForm {
+      min-height: 300px;
+      max-height: 545px;
+      overflow: auto; /* 내용이 넘치면 스크롤 생성 */
+    }
+    .formBox {
+      height: 75px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .innerBox {
+      display: flex;
+      width: 90%;
+      align-items: center;
+      justify-content: center;
+    }
+    .formLabel {
+      flex: 0 0 25%;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: start;
+    }
+
+    /* date */
+    #date {
+      height: 18px;
+      padding: 10px;
+      border: 2px solid var(--point-color);
+      border-radius: 25px;
+      text-align: center;
+    }
+
+    /* transactionType */
+    #transactionTypeBox {
+      display: flex;
+      justify-content: center;
+      align-items: unset !important;
+      padding: 0 15px;
+    }
+    .typeBtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+    #madeType{
+      flex-grow: 1;
+      transition: flex-grow 1000ms linear;
+      background-color: var(--make-color);
+      color: white;
+    }
+    #spentType{
+      flex-grow: 1;
+      transition: flex-grow 1000ms linear;
+      background-color: var(--spend-color);
+      color: white;
+    }
+    .growLess {
+      flex-grow: 0.3 !important;
+    }
+    #emptyDiv {
+      flex: 0 0 2%;
+    }
+    /* dietBox */
+    #dietBox {
+      display: none;
+      height: 10px;
+    }
+    #dietBox .innerBox {
+      justify-content: end;
+    }
+    #dietBox .formLabel {
+      font-size: 14px;
+    }
+    #dietBox #isInsteadDiet {
+      width: 6%;
+    }
+    #isDiscountBox {
+      height: 25px;
+    }
+    #isDiscountBox input {
+      width: 10%;
+    }
+    #isDiscountBox label {
+      flex: unset;
+      display: inline-block;
+      text-align: left;
+    }
+    #discountBox {
+      display: none;
+      flex-direction: column;
+      min-height: 165px;
+      margin: 10px 16px;
+      border: 1px dotted var(--point-color);
+      border-radius: 6px;
+      transition: all 1s;
+    }
+    .hide {
+      display: none !important;
+    }
+    .show {
+      display: flex !important;
+    }
+    #discountTypeBox {
+      width: 100%;
+    }
+    #discountAmountBox {
+      width: 100%;
+    }
+    #discountThanksToBox {
+      width: 100%;
+    }
+    #memo {
+      text-align: center;
+    }
+
+    #finalPriceBox {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+      padding: 15px;
+      border-top: 1px dotted black;
+      margin: 8px auto auto;
+    }
+    #submitBox {
+      position: fixed;
+      bottom: 20px;
+      width: 88%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #submitBtn {
+      display: block;
+      width: 93%;
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: var(--point-color);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0px 0px 6px #005ffe;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    #submitBtn:hover {
+      box-shadow: 0px 0px 3px #005ffe;
+      transform: translateY(2px);
+    }
+
+    /* CSS for loading overlay */
+    #loadingOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+      z-index: 9999; /* Ensure it's above other content */
+      text-align: center;
+    }
+
+    /* Center the loading text */
+    #loadingOverlay p {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 24px;
+    }
+
+    #successMessageBox {
+      display: none;
+      position: fixed;
+      width: 100%;
+      top: 154px;
+      padding: 34px 20px;
+      text-align: center;
+      color: white;
+      background-color: black;
+      opacity: 0.9;
+    }
+    #summaryBox {
+      margin-top: 10px;
+    }
+    .summary {
+      border-radius: 7px;
+      padding: 5px;
+      font-size: 12px;
+    }
+    #dialog label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    #dialog input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+    $(function() {
+      const typeBtn = $('.typeBtn');
+      const transactionType = $('#transactionType');
+      const category = $('#category');
+      const money = $('#money');
+      const dietBox = $('#dietBox');
+      const isDiscount = $('#isDiscount');
+      const discountBox = $('#discountBox');
+      const discountType = $('#discountType');
+      const discountAmount = $('#discountAmount');
+      const growLessClass = 'growLess';
+
+      const madeType = $("#madeType");
+      const spentType = $("#spentType");
+      const submitBtn = $('#submitBtn');
+      const titleBox = $('#titleBox');
+      const title = $('#title');
+
+      //setDate
+      setDate();
+
+      //setTitle
+      setTitle();
+      titleBox.on('click', setTitle);
+
+      //wallet, 할인 종류 불러오기
+      fetchValues();
+
+      //make, spend click
+      madeType.on('click', function () {
+        spentType.addClass(growLessClass);
+        madeType.removeClass(growLessClass);
+        transactionType.val('made');
+        //카테고리 불러오기
+        google.script.run.withSuccessHandler(populateCategories).getMadeCategories();
+      });
+      spentType.on('click', function () {
+        madeType.addClass(growLessClass);
+        spentType.removeClass(growLessClass);
+        transactionType.val('spent');
+        //카테고리 불러오기
+        google.script.run.withSuccessHandler(populateCategories).getSpentCategories();
+      });
+      typeBtn.on('webkitTransitionEnd', function () {
+        removeOption(category, 'unselected');
+        addOption(category, 'unselected', '분류를 선택해주세요.');
+
+        if (madeType.hasClass(growLessClass)){
+          madeType.text('made');
+          spentType.text('spent money 😥');
+          //배경색 바꾸기 포인트색 강조
+          document.documentElement.style.setProperty('--main-bg-color', 'indianred');
+          document.documentElement.style.setProperty('--point-color', '#173565');
+        } else if (spentType.hasClass(growLessClass)){
+          madeType.text('made money 🥳');
+          spentType.text('spent');
+          //배경색 바꾸기 포인트색 강조
+          document.documentElement.style.setProperty('--main-bg-color', 'mediumseagreen');
+          document.documentElement.style.setProperty('--point-color', '#173565');
+        }
+        //제목 바꾸기
+        title.css('color', 'white');
+      });
+
+      category.change(function() {
+        var selectedOption = $(this).val();
+        if (selectedOption === '술/오락') {
+          dietBox.removeClass('hide');
+          dietBox.addClass('show');
+        } else {
+          dietBox.removeClass('show');
+          dietBox.addClass('hide');
+        }
+      });
+
+      //isDiscount
+      isDiscount.on('click', function () {
+        const isChecked = isDiscount.is(':checked');
+        if(isChecked === true){ //할인!
+          discountBox.removeClass('hide');
+          discountBox.addClass('show');
+          addOption(discountType, 'unselected', '할인 종류를 선택해주세요.');
+          removeOption(discountType, '-');
+        }else {
+          discountBox.removeClass('show');
+          discountBox.addClass('hide');
+          addOption(discountType, '-', '미선택');
+          removeOption(discountType, 'unselected');
+        }
+      });
+      //totalPrice
+      money.on('input', updateTotal);
+      discountAmount.on('input', updateTotal);
+
+      //submitBtn
+
+      submitBtn.on('click', function () {
+        const validateResult = formValidate();
+        if(validateResult){
+          handleSubmit();
+        }
+      });
+    });
+
+
+    //FUNCTION AREA
+    function getName() {
+      const inputName = prompt("가계부 제목을 기입해주세요! \n ex) 스타벅스 아아 🥤", "");
+      if(inputName === null){
+        loadPage('index');
+      } else if(inputName === ''){
+        getName();
+      }
+      return inputName;
+    }
+    function setTitle(){
+      const title = $('#title');
+      const name = $('#name');
+      const inputName = getName();
+      title.text(inputName);
+      name.val(inputName);
+    }
+    function setDate(){
+      const date = $('#date');
+      date.val(getTodayDate());
+    }
+    function getTodayDate() {
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero based
+      const year = today.getFullYear();
+      return year + '-' + month + '-' + day;
+    }
+    function addOption(selectTag, value, text) {
+      $(selectTag).prepend('<option value="' + value + '">' + text + '</option>');
+    }
+
+    function removeOption(selectTag, value) {
+      const option = selectTag.find('option[value="' + value + '"]');
+      if (option.length > 0) {
+        option.remove();
+      }
+    }
+    function removeAllOptionsExceptFirst(selectTag) {
+      selectTag.find('option:not(:first)').remove();
+    }
+
+    //google
+    function fetchValues() {
+      google.script.run.withSuccessHandler(populateAssetSource).getAssetSource();
+      google.script.run.withSuccessHandler(populateDiscountType).getDiscount();
+    }
+    function populateValues(values, select) {
+      removeAllOptionsExceptFirst(select); // 기존 옵션 제거
+      values.forEach(function(val) {
+        select.append($('<option>', { value: val, text: val }));
+      });
+    }
+    function populateCategories(categories) {
+      const category = $('#category');
+      populateValues(categories, category);
+    }
+    function populateAssetSource(assets) {
+      const wallet = $('#wallet');
+      populateValues(assets, wallet);
+    }
+    function populateDiscountType(discount) {
+      const discountType = $('#discountType');
+      populateValues(discount, discountType);
+    }
+
+    //form validate
+    function formValidate() {
+      const unselected = 'unselected';
+
+      const date = $('#date');
+      if (isInvalid(date.val())) {
+        alert('날짜 입력 🥸');
+        return false;
+      }
+
+      const transactionType = $('#transactionType');
+      if (isInvalid(transactionType.val())) {
+        alert('made/spent 선택 🥸');
+        return false;
+      }
+
+      const wallet = $('#wallet');
+      if (isInvalid(wallet.val())) {
+        alert('Wallet 입력 🥸');
+        return false;
+      }
+
+      const category = $('#category');
+      if (isInvalid(category.val())) {
+        alert('Category 입력 🥸');
+        return false;
+      }
+
+      const money = $('#money');
+      if (isInvalid(money.val())) {
+        alert('Money 입력 🥸');
+        return false;
+
+      }
+
+      const isDiscount = $('#isDiscount');
+      if(isDiscount.is(':checked')){
+
+        const discountType = $('#discountType');
+        if (isInvalid(discountType.val())) {
+          alert('Discount Type 입력 🥸');
+          return false;
+        }
+
+        const discountAmount = $('#discountAmount');
+        if (isInvalid(discountAmount.val())) {
+          alert('Discount Amount 입력 🥸');
+          return false;
+        }
+      }
+      return true;
+    }
+    function isInvalid(val){
+      if (val === null) return true;
+      if (typeof val === 'string' && val === '') return true;
+      if (typeof val === 'undefined') return true;
+      return val === 'unselected';
+    }
+
+    //form submit
+    function handleSubmit() {
+      const today = new Date();
+      today.setHours(today.getHours() + 9);
+      const insertDateTime = today.toISOString().replace('T', ' ').substring(0, 16);
+
+      const date = $('#date');
+      const name = $('#name');
+      const transactionType = $('#transactionType');
+      const wallet = $('#wallet');
+      const category = $('#category');
+      const money = $('#money');
+      const discountType = $('#discountType');
+      const discountAmount = $('#discountAmount');
+      const discountThanksTo = $('#discountThanksTo');
+      const memo = $('#memo');
+
+      const data = {      
+        date: date.val(),
+        name: name.val(),
+        transactionType: transactionType.val(),
+        wallet: wallet.val(),
+        category: category.val(),
+        money: money.val(),
+        discountType: discountType.val(),
+        discountAmount: (discountAmount.val() ? discountAmount.val() : '-'),
+        thanksTo: (discountThanksTo.val() ? discountThanksTo.val() : '-'),
+        memo: (memo.val() ? memo.val() : '-'),
+        insertDateTime: insertDateTime
+      };
+
+      const loadingOverlay = $('#loadingOverlay');      
+      loadingOverlay.show();
+      
+      const discountBox = $('#discountBox');
+      
+      const isInsteadDiet = $('#isInsteadDiet');      
+      const isInsteadDietChecked = isInsteadDiet.is(':checked');
+      const insteadDietData = JSON.parse(JSON.stringify(data));
+      if(isInsteadDietChecked){
+        const defaultFoodExpenses = 10000;
+        const checkFoodExpenses = (data.money - (data.discountAmount == '-' ? 0 : data.discountAmount)) > 10000;
+        if(checkFoodExpenses){
+          data.money -= defaultFoodExpenses;
+          insteadDietData.money = defaultFoodExpenses;
+          insteadDietData.name += ' (끼니 대신)';
+          insteadDietData.category = '식비';
+          insteadDietData.discountAmount = '-';
+
+          const datas = [];
+          datas.push(data);
+          datas.push(insteadDietData);
+
+          google.script.run
+          .withSuccessHandler(function() {                                        
+            loadingOverlay.hide();
+            onSuccess();                    
+          })
+          .withFailureHandler(function(error) {
+            console.error('Error:', error);
+            loadingOverlay.hide();
+          })
+          .submitDatas(datas);
+        } else {
+          data.name += ' (술과 같이)';
+          data.category = '식비';
+          google.script.run
+          .withSuccessHandler(function() {                                        
+            loadingOverlay.hide();
+            onSuccess();                    
+          })
+          .withFailureHandler(function(error) {
+            console.error('Error:', error);
+            loadingOverlay.hide();
+          })
+          .submitData(data);
+        }
+        
+      } else {
+        google.script.run
+          .withSuccessHandler(function() {                                        
+            loadingOverlay.hide();
+            onSuccess();                    
+          })
+          .withFailureHandler(function(error) {
+            console.error('Error:', error);
+            loadingOverlay.hide();
+          })
+          .submitData(data);
+      }      
+    }
+
+    //form success
+    function onSuccess() {
+      const successMsgBox = $('#successMessageBox');
+      const successMsg = $('#successMessage');
+
+      successMsg.text("기입 완료 ☑️");
+
+      successMsgBox.show().delay(1500).fadeOut();
+
+      if (confirm('또 기입하시겠습니까?')) {
+        // 사용자가 확인을 선택한 경우
+        loadPage('form');
+      } else {
+        // 사용자가 취소를 선택한 경우
+        loadPage('index');
+      }
+    }
+
+    //total price
+    function updateTotal() {
+      const finalPrice = $('#finalPrice');
+      const money = $('#money');
+      const discountAmount = $('#discountAmount');
+
+      const price = parseFloat(money.val()) || 0;
+      const discount = parseFloat(discountAmount.val()) || 0;
+      const totalPrice = price - discount;
+      const formatter = new Intl.NumberFormat('ko-KR', {
+        style: 'currency',
+        currency: 'KRW'
+      });
+      finalPrice.text(formatter.format(totalPrice));
+    }
+    function getTotal() {
+      const money = $('#money');
+      const discountAmount = $('#discountAmount');
+
+      const price = parseFloat(money.val()) || 0;
+      const discount = parseFloat(discountAmount.val()) || 0;
+      return price - discount;
+    }
+    function loadPage(page) {
+      google.script.run.withSuccessHandler(function(html) {
+        document.open();
+        document.write(html);
+        document.close();
+      }).getHtml(page);
+    }
+  </script>
+</head>
+
+<body>
+  <div id="titleBox">
+    <h2 id="title">이름을 입력해주세요!</h2>
+    <input type="hidden" id="name" name="name" />
+  </div>
+  <div id="bodyBox">
+    <form id="insertForm">
+      <div id="dateBox" class="formBox">
+        <div class="innerBox">
+          <input type="date" id="date" name="date"/>
+        </div>
+      </div>
+      <div id="transactionTypeBox" class="formBox">
+        <a class="typeBtn" id="madeType">made</a>
+        <div id="emptyDiv"></div>
+        <a class="typeBtn" id="spentType">spent</a>
+        <input type="hidden" id="transactionType" name="transactionType">
+      </div>
+
+
+      <div id="walletBox" class="formBox">
+        <div class="innerBox">
+          <label class="formLabel" for="wallet">Wallet</label>
+          <select id="wallet" name="wallet">
+            <option value="unselected">자산을 선택해주세요.</option>
+            <!-- 자산 옵션이 여기 추가될 것입니다 -->
+          </select>
+        </div>
+      </div>
+      <div id="categoryBox" class="formBox">
+        <div class="innerBox">
+          <label class="formLabel" for="category">Category</label>
+          <select id="category" name="category">
+            <option value="unselected">수입과 지출을 선택해주세요.</option>
+            <!-- 카테고리 옵션이 여기 추가될 것입니다 -->
+          </select>
+        </div>
+      </div>
+      <div id="dietBox" class="formBox">
+        <div class="innerBox">
+          <label class="formLabel" for="isInsteadDiet">끼니 대신 술?</label>
+          <input type="checkbox" id="isInsteadDiet" name="isInsteadDiet" />
+        </div>
+      </div>
+      <div id="moneyBox" class="formBox">
+        <div class="innerBox">
+          <label class="formLabel" for="money">Money</label>
+          <input type="number" min="0" id="money" name="money" placeholder="금액을 입력해주세요. (KRW)"/>
+        </div>
+      </div>
+      <div id="isDiscountBox" class="formBox">
+        <div class="innerBox">
+          <label class="formLabel" for="isDiscount">If you got a discount, check this out</label>
+          <input type="checkbox" id="isDiscount" name="isDiscount" />
+        </div>
+      </div>
+      <div id="discountBox" class="formBox">
+        <div id="discountTypeBox" class="formBox">
+          <div class="innerBox">
+            <label class="formLabel" for="discountType">Discount Type</label>
+            <select id="discountType" name="discountType">
+              <option value="-">미선택</option>
+              <!-- 할인 타입 옵션이 여기 추가될 것입니다 -->
+            </select>
+          </div>
+        </div>
+        <div id="discountAmountBox" class="formBox">
+          <div class="innerBox">
+            <label class="formLabel" for="discountAmount">Discount Amount</label>
+            <input type="number" min="0" id="discountAmount" name="discountAmount" placeholder="할인 금액을 입력해주세요. (KRW)"/>
+          </div>
+        </div>
+        <div id="discountThanksToBox" class="formBox">
+          <div class="innerBox">
+            <label class="formLabel" for="discountThanksTo">🙇🏻🫶‍🙇🏻</label>
+            <input type="text" id="discountThanksTo" name="thanksTo" placeholder="Thanks to..."/>
+          </div>
+        </div>
+      </div>
+      <div id="memoBox" class="formBox">
+        <div class="innerBox">
+          <label class="formLabel" for="memo">Memo</label>
+          <input type="text" id="memo" name="memo" />
+        </div>
+      </div>
+    </form>
+    <div id="finalPriceBox">
+      <span>Final Price</span>
+      <span id="finalPrice">0</span>
+    </div>
+    <div id="submitBox">
+      <a id="submitBtn">Submit</a>
+    </div>
+  </div>
+
+  <div id="loadingOverlay">
+    <p>Loading...</p>
+  </div>
+
+  <div id="successMessageBox" >
+    <span id="successMessage"></span>
+  </div>
+
+
+</body>
+
+</html>
