@@ -5,7 +5,7 @@
 본 프로젝트는 Google Apps Script(GAS)를 활용하여 개인 가계부를 자동화한 시스템입니다. GAS를 통해 지출/소득을 입력하고, Google Sheets와 연동하여 통계 및 반복 지출 기능을 자동화합니다.
 
 ---
-![main](https://github.com/leedaham/app-script-account-book/blob/main/image/1.main.png)
+<img src="https://github.com/leedaham/app-script-account-book/blob/main/image/1.main.png", height="200x", width="100px">
 
 ## 기능 구성
 
