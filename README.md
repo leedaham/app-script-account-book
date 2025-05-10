@@ -3,9 +3,9 @@
 ## 개요
 
 본 프로젝트는 Google Apps Script(GAS)를 활용하여 개인 가계부를 자동화한 시스템입니다. GAS를 통해 지출/소득을 입력하고, Google Sheets와 연동하여 통계 및 반복 지출 기능을 자동화합니다.
+<img width="240" alt="Image" src="https://github.com/user-attachments/assets/6c0007bc-d928-4e4c-a219-ca787214b717" />
 
 ---
-<img width="180" alt="Image" src="https://github.com/user-attachments/assets/2102cd3b-afc3-45bf-b014-aa69b8b40c76" />
 
 ## 기능 구성
 
@@ -21,6 +21,11 @@
   - 금액
   - 할인 여부
   - 메모
+
+<img width="180" alt="Image" src="https://github.com/user-attachments/assets/7ea8b3dc-2da2-4040-875b-5cfdd39cea23" />
+<img width="240" alt="Image" src="https://github.com/user-attachments/assets/15fda35c-81a6-411a-9fcb-2cac472531fd" />
+<img width="240" alt="Image" src="https://github.com/user-attachments/assets/4a3e6eec-253e-40ee-8498-bbb3ada32cef" />
+<img width="240" alt="Image" src="https://github.com/user-attachments/assets/5d66c5be-1676-4d5e-aeab-35715c3c5390" />
 
 ### 2. 데이터 저장
 
@@ -40,6 +45,9 @@
 - GAS 내 대시보드 또는 간단한 UI로 출력 가능
 - 월별 사용 금액, 일별 사용 금액 확인
 - 최근 기입된 20건 내용 확인
+
+<img width="240" alt="Image" src="https://github.com/user-attachments/assets/67628d71-2c68-40b4-8002-77330318c71f" />
+<img width="240" alt="Image" src="https://github.com/user-attachments/assets/fa1b5df9-6178-46b9-a582-b8dc9df80427" />
 
 ### 5. 고정 지출 처리 (반복 실행)
 
