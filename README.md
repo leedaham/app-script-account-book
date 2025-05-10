@@ -3,6 +3,8 @@
 ## 개요
 
 본 프로젝트는 Google Apps Script(GAS)를 활용하여 개인 가계부를 자동화한 시스템입니다. GAS를 통해 지출/소득을 입력하고, Google Sheets와 연동하여 통계 및 반복 지출 기능을 자동화합니다.
+
+
 <img width="240" alt="Image" src="https://github.com/user-attachments/assets/6c0007bc-d928-4e4c-a219-ca787214b717" />
 
 ---
@@ -22,10 +24,10 @@
   - 할인 여부
   - 메모
 
-<img width="180" alt="Image" src="https://github.com/user-attachments/assets/7ea8b3dc-2da2-4040-875b-5cfdd39cea23" />
-<img width="240" alt="Image" src="https://github.com/user-attachments/assets/15fda35c-81a6-411a-9fcb-2cac472531fd" />
-<img width="240" alt="Image" src="https://github.com/user-attachments/assets/4a3e6eec-253e-40ee-8498-bbb3ada32cef" />
-<img width="240" alt="Image" src="https://github.com/user-attachments/assets/5d66c5be-1676-4d5e-aeab-35715c3c5390" />
+<img width="180" alt="input1" src="https://github.com/user-attachments/assets/7ea8b3dc-2da2-4040-875b-5cfdd39cea23" />
+<img width="240" alt="input2" src="https://github.com/user-attachments/assets/15fda35c-81a6-411a-9fcb-2cac472531fd" />
+<img width="240" alt="input3" src="https://github.com/user-attachments/assets/4a3e6eec-253e-40ee-8498-bbb3ada32cef" />
+<img width="240" alt="input4" src="https://github.com/user-attachments/assets/5d66c5be-1676-4d5e-aeab-35715c3c5390" />
 
 ### 2. 데이터 저장
 
@@ -46,8 +48,8 @@
 - 월별 사용 금액, 일별 사용 금액 확인
 - 최근 기입된 20건 내용 확인
 
-<img width="240" alt="Image" src="https://github.com/user-attachments/assets/67628d71-2c68-40b4-8002-77330318c71f" />
-<img width="240" alt="Image" src="https://github.com/user-attachments/assets/fa1b5df9-6178-46b9-a582-b8dc9df80427" />
+<img width="240" alt="recent" src="https://github.com/user-attachments/assets/67628d71-2c68-40b4-8002-77330318c71f" />
+<img width="240" alt="montly" src="https://github.com/user-attachments/assets/fa1b5df9-6178-46b9-a582-b8dc9df80427" />
 
 ### 5. 고정 지출 처리 (반복 실행)
 
@@ -71,6 +73,10 @@
 | daily   | 일별 기입 데이터             |
 | repeat       | 매월 반복되는 고정 지출 항목 관리     |
 | Reference    | 결제수단, 카테고리 등 참조 데이터 관리 |
+
+<img width="1333" alt="dataSheet" src="https://github.com/user-attachments/assets/9ec03c9a-3b53-4299-93ed-934bf6791a60" />
+<img width="977" alt="repeat" src="https://github.com/user-attachments/assets/985a7635-46cb-4798-8da3-3db70123185f" />
+<img width="427" alt="Reference" src="https://github.com/user-attachments/assets/06518d7f-b9c3-4961-9485-6a73088a2508" />
 
 ---
 
